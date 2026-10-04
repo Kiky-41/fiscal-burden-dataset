@@ -1,8 +1,7 @@
 # Dataset G — Fiscal burden of the energy transition: subsidies, compensation, and PLN
 
 [![DOI](https://zenodo.org/badge/1403911014.svg)](https://doi.org/10.5281/zenodo.23137075)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23137075.svg)](https://doi.org/10.5281/zenodo.23137075)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](LICENSE)
 
 > **Citation required:** if you use this dataset, please cite it (see `CITATION.cff` or the *Cite this repository* button).
 
