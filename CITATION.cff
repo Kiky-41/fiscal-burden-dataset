@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+title: "Dataset G: Fiscal Burden of the Energy Transition - Subsidies, Compensation, and PLN (Indonesia, 2015-2025)"
+message: "If you use this dataset, please cite it as follows."
+type: dataset
+authors:
+  - family-names: "Ikhsan"
+    given-names: "Rifki Rahman Nur"
+    orcid: "https://orcid.org/0009-0002-7873-0049"
+  - family-names: "Arifin"
+    given-names: "Andry"
+doi: 10.5281/zenodo.23137075
+repository-code: "https://github.com/Kiky-41/fiscal-burden-dataset"
+license: MIT
+version: v1.0.1
