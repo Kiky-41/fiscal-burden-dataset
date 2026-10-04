@@ -3,8 +3,6 @@
 [![DOI](https://zenodo.org/badge/1403911014.svg)](https://doi.org/10.5281/zenodo.23137075)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](LICENSE)
 
-> **Citation required:** if you use this dataset, please cite it (see `CITATION.cff` or the *Cite this repository* button).
-
 Sources: **APBN Financial Note FY2025** (Appendix Tables 1, 2, 5; Ch. 1 sensitivity; Ch. 3 subsidies; Ch. 6 fiscal risk), **PLN audited financial statements 2015–2024** (via `../PLN-Health-Dataset/pln_financial_panel.csv`), **PLN Statistics 2023** (Figure 11, BPP vs tariffs). Run `python3 build_fiscal.py`; 9 validation checks, all pass.
 
 | File | Contents |
