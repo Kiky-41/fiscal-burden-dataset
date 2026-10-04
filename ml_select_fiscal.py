@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""G (beban fiskal): pemilihan metode prakiraan dukungan pemerintah berdasarkan kinerja out-of-sample (rolling origin 2021-2025, min. latih 6 tahun).
-Kandidat (semua ditetapkan di muka): naif, rata-rata 3 tahun, drift linear (semua/5 th), drift log (semua/3 th/5 th), Holt teredam, ETS-aditif,
-koheren per komponen (identitas dukungan = opex/(1-margin) - pendapatan ex-dukungan; median deterministik), serta rata-rata koheren+drift-log.
-Seleksi bersarang: untuk tiap tahun uji, pemenang dipilih hanya dari galat tahun-tahun SEBELUMNYA (2021 memakai naif). Keluaran: ml_select_fiscal_scores.csv, ml_select_fiscal_nested.csv.
-Peringatan: n uji = 5, jadi selisih antar-metode hampir pasti tidak signifikan; hasil dilaporkan apa adanya."""
+"""G (fiscal burden): selecting a government-support forecasting method on out-of-sample performance (rolling origins 2021-2025, min. training 6 years).
+Candidates (all pre-specified): naive, 3-year mean, linear drift (full/5y), log drift (full/3y/5y), damped Holt, level ETS,
+component-coherent (support identity = opex/(1-margin) - ex-support revenue; deterministic median), and coherent+log-drift mean.
+Nested selection: for each test year, the winner is chosen only from PRIOR years' errors (2021 uses naive). Outputs: ml_select_fiscal_scores.csv, ml_select_fiscal_nested.csv.
+Warning: n_test = 5, so method differences are almost surely insignificant; results reported as-is."""
 import os, sys, warnings
 import numpy as np, pandas as pd
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
@@ -42,11 +42,11 @@ nest = []
 for y in W.index:
     prev = W.loc[:y - 1]; ch = 'naif' if len(prev) == 0 else prev.mean().idxmin(); nest.append(dict(year=y, chosen=ch, abs_err=W.loc[y, ch], abs_err_naif=W.loc[y, 'naif'], abs_err_best_static=W.loc[y, S.index[0]]))
 N = pd.DataFrame(nest); N.to_csv(os.path.join(HERE, 'ml_select_fiscal_nested.csv'), index=False); print(N.round(1).to_string(index=False))
-best = S.index[0]; print('terbaik:', best, 'nested MAE', round(N.abs_err.mean(), 1), 'naif', round(N.abs_err_naif.mean(), 1))
-p26 = CAND[best](G); print('prakiraan 2026 (titik)', round(p26, 1), '2025 aktual', round(G.gov_support_trn.iloc[-1], 1))
+best = S.index[0]; print('best:', best, 'nested MAE', round(N.abs_err.mean(), 1), 'naive', round(N.abs_err_naif.mean(), 1))
+p26 = CAND[best](G); print('2026 forecast (point)', round(p26, 1), '2025 actual', round(G.gov_support_trn.iloc[-1], 1))
 pd.DataFrame([dict(model=best, pred_2026=p26)]).to_csv(os.path.join(HERE, 'ml_select_fiscal_pred_2026.csv'), index=False)
-chk('backtest 5 tahun x %d kandidat lengkap' % len(CAND), R.shape[0] == 5 * len(CAND) and np.isfinite(R.pred).all())
-chk('identitas dukungan (semua tahun, +-0,5 T)', np.allclose(G.opex_total_trn / (1 - G.margin) - G.rev_ex_gov_support_trn, G.gov_support_trn, atol=0.5))
-chk('info: MAE terbaik vs naif (statis)', True, f'{S.mae_2021_2025.iloc[0]:.1f} vs {S.loc["naif","mae_2021_2025"]:.1f}')
-chk('info: MAE bersarang vs naif (jujur, tanpa pilih-belakangan)', True, f'{N.abs_err.mean():.1f} vs {N.abs_err_naif.mean():.1f}')
+chk('5-year x %d-candidate backtest complete' % len(CAND), R.shape[0] == 5 * len(CAND) and np.isfinite(R.pred).all())
+chk('support identity (all years, +-0.5 T)', np.allclose(G.opex_total_trn / (1 - G.margin) - G.rev_ex_gov_support_trn, G.gov_support_trn, atol=0.5))
+chk('info: best vs naive MAE (static)', True, f'{S.mae_2021_2025.iloc[0]:.1f} vs {S.loc["naif","mae_2021_2025"]:.1f}')
+chk('info: nested vs naive MAE (honest, no look-ahead)', True, f'{N.abs_err.mean():.1f} vs {N.abs_err_naif.mean():.1f}')
 finish('ml_select_fiscal')
